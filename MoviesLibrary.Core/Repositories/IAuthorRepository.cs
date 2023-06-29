@@ -3,7 +3,7 @@ using MoviesLibrary.Core.Models;
 
 namespace MoviesLibrary.Core.Repositories
 {
-    public interface IAuthorRepository : IBaseRepository<ApplicationUser>
+    public interface IAuthorRepository 
     {
         public Task<string?> RegisterAsync(ApplicationUser user, string password);
         public Task<AuthDto> LoginAync(string email, string password);

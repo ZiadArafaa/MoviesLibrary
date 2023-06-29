@@ -45,6 +45,7 @@ builder.Services.AddAuthentication(option =>
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddTransient<SeedRole>();
 builder.Services.AddTransient<SeedAdmin>();
+
 builder.Services.AddTransient<IAuthorRepository, AuthorRepository>();
 builder.Services.AddExpressiveAnnotations();
 

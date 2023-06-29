@@ -12,12 +12,11 @@ using System.Text;
 
 namespace MoviesLibrary.EF.Repositories
 {
-    public class AuthorRepository : BaseRepository<ApplicationUser>, IAuthorRepository
+    public class AuthorRepository : IAuthorRepository
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly JWT _jwt;
-        public AuthorRepository(ApplicationDbContext context, UserManager<ApplicationUser> user, IOptions<JWT> options)
-            : base(context)
+        public AuthorRepository( UserManager<ApplicationUser> user, IOptions<JWT> options)   
         {
             _userManager = user;
             _jwt = options.Value;
