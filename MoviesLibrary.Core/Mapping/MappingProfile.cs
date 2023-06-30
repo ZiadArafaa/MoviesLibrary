@@ -14,6 +14,8 @@ namespace MoviesLibrary.Core.Mapping
         public MappingProfile()
         {
             CreateMap<RegisterDto, ApplicationUser>();
+            CreateMap<CreateGenereDto, Genere>();
+            
         }
     }
 }
