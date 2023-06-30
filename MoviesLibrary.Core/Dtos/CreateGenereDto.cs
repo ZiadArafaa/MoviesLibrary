@@ -11,6 +11,6 @@ namespace MoviesLibrary.Core.Dtos
     {
         [MaxLength(50,ErrorMessage ="{0} Maxmuim chars is {1}.")]
         public string Name { get; set; } = null!;
-        public IFormFile Poster { get; set; } = null!;
+        public IFormFile Poster { get; set; } = null!;   
     }
 }

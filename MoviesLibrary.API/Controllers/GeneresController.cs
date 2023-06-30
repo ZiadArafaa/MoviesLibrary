@@ -34,10 +34,65 @@ namespace MoviesLibrary.API.Controllers
 
             return Ok(await _repository.CreateAsync(model));
         }
-        //[HttpPut("Update/{id}")]
-        //public async Task<IActionResult> UpdateAsync(byte id,[FromForm] UpdateGenereDto dto)
-        //{
-            
-        //}
+        [HttpPut("Update/{id}")]
+        public async Task<IActionResult> UpdateAsync(byte id, [FromForm] UpdateGenereDto dto)
+        {
+            var model = await _repository.GetByIdAsync(id);
+            if (model is null)
+                return NotFound();
+
+            model.Name = dto.Name;
+            if (dto.Poster is not null)
+            {
+                var Poster = await ImageService.CreateImageAsync(dto.Poster);
+
+                if (Poster is null)
+                    return BadRequest("Check size or extensions.");
+
+                model.Poster = Poster;
+            }
+
+            int effected = _repository.Update(model);
+
+            if (!effected.Equals(1))
+                return BadRequest("Something Wrong!");
+
+            return Ok(model);
+        }
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            var Generes = await _repository.GetAllAsync();
+
+            if (!Generes.Any())
+                return NotFound();
+
+            return Ok(Generes);
+        }
+        [HttpGet("Get/{id}")]
+        public async Task<IActionResult> GetByIdAsync(byte id)
+        {
+            var Genere = await _repository.GetByIdAsync(id);
+
+            if (Genere is null)
+                return NotFound();
+
+            return Ok(Genere);
+        }
+        [HttpDelete("Delete/{id}")]
+        public async Task<IActionResult> DeleteAsync(byte id)
+        {
+            var Genere = await _repository.GetByIdAsync(id);
+
+            if (Genere is null)
+                return NotFound();
+
+            int effected = _repository.Delete(Genere);
+
+            if(!effected.Equals(1))
+                return BadRequest("Something Wrong!");
+
+            return Ok(Genere);
+        }
     }
 }
