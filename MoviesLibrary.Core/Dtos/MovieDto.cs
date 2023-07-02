@@ -5,17 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using UoN.ExpressiveAnnotations.NetCore.Attributes;
 
-namespace MoviesLibrary.Core.Models
+namespace MoviesLibrary.Core.Dtos
 {
-    public class Movie
+    public abstract class MovieDto
     {
-        public int Id { get; set; }
+        [MaxLength(100)]
         public string Title { get; set; } = null!;
+        [MaxLength(500)]
         public string Description { get; set; } = null!;
-        public string PosterUrl { get; set; } = null!;
-        public string PublicId { get; set; } = null!;
+        [AssertThat("PublishingDate <= Today()")]
         public DateTime PublishingDate { get; set; }
         public byte GenereId { get; set; }
-        public Genere? Genere { get; set; }
     }
 }

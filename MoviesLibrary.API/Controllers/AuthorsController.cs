@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MoviesLibrary.Core;
 using MoviesLibrary.Core.Dtos;
 using MoviesLibrary.Core.Models;
 using MoviesLibrary.Core.Repositories;
@@ -12,12 +13,11 @@ namespace MoviesLibrary.API.Controllers
     [ApiController]
     public class AuthorsController : ControllerBase
     {
-
-        private readonly IAuthorRepository _repository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public AuthorsController(IAuthorRepository repository, IMapper mapper)
+        public AuthorsController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
         [HttpPost("Register")]
@@ -26,10 +26,10 @@ namespace MoviesLibrary.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(dto);
 
-            if (await _repository.IsExistAsync(dto.Email) is not null)
+            if (await _unitOfWork.Authors.IsExistAsync(dto.Email) is not null)
                 return BadRequest("Sorry, email exist!");
 
-            var ErrorResult = await _repository.RegisterAsync(_mapper.Map<ApplicationUser>(dto), dto.Password);
+            var ErrorResult = await _unitOfWork.Authors.RegisterAsync(_mapper.Map<ApplicationUser>(dto), dto.Password);
 
             if (!string.IsNullOrEmpty(ErrorResult))
                 return BadRequest(ErrorResult);
@@ -39,7 +39,7 @@ namespace MoviesLibrary.API.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginDto dto)
         {
-            var Result = await _repository.LoginAync(dto.Email, dto.Password);
+            var Result = await _unitOfWork.Authors.LoginAync(dto.Email, dto.Password);
 
             if (!Result.IsAuthenticated)
                 return NotFound(Result.Message);
@@ -49,11 +49,11 @@ namespace MoviesLibrary.API.Controllers
         [HttpPost("Logout")]
         public async Task<IActionResult> LogoutAsync([EmailAddress] string Email)
         {
-            var User = await _repository.IsExistAsync(Email);
+            var User = await _unitOfWork.Authors.IsExistAsync(Email);
             if (User is null)
                 return NotFound();
 
-            await _repository.LogoutAsync(User);
+            await _unitOfWork.Authors.LogoutAsync(User);
             return Ok();
         }
     }

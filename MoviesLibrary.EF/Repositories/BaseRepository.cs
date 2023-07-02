@@ -17,24 +17,17 @@ namespace MoviesLibrary.EF.Repositories
         {
             _context = context;
         }
-        public async Task<T> CreateAsync(T model)
+        public async Task CreateAsync(T model)
         {
             await _context.AddAsync(model);
-            _context.SaveChanges();
-
-            return model;
         }
-        public int Update(T model)
+        public void Update(T model)
         {
             _context.Update(model);
-
-            return _context.SaveChanges();
         }
-        public int Delete(T model)
+        public void Delete(T model)
         {
             _context.Remove(model);
-
-            return _context.SaveChanges();
         }
         public async Task<IEnumerable<T>> GetAllAsync()
         {

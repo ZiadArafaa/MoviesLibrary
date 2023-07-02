@@ -10,6 +10,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using MoviesLibrary.EF.Seeds;
 using UoN.ExpressiveAnnotations.NetCore.DependencyInjection;
+using MoviesLibrary.Core;
+using MoviesLibrary.EF;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,12 +44,16 @@ builder.Services.AddAuthentication(option =>
     };
 });
 
+builder.Services.AddExpressiveAnnotations();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 builder.Services.AddTransient<SeedRole>();
 builder.Services.AddTransient<SeedAdmin>();
-builder.Services.AddTransient<IGenereRepository, GenereRepository>();
-builder.Services.AddTransient<IAuthorRepository, AuthorRepository>();
-builder.Services.AddExpressiveAnnotations();
+
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+//builder.Services.AddTransient<IGenereRepository, GenereRepository>();
+//builder.Services.AddTransient<IAuthorRepository, AuthorRepository>();
 
 
 builder.Services.AddControllers();

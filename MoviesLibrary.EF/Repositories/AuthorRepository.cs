@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using MoviesLibrary.Core.Consts;
 
 namespace MoviesLibrary.EF.Repositories
 {
@@ -25,7 +26,13 @@ namespace MoviesLibrary.EF.Repositories
         {
             var Result = await _userManager.CreateAsync(user, password);
 
-            return Result is not null ? string.Join(" , ", Result.Errors.Select(e => e.Description).ToList()) : null;
+            if (Result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, Role.User);
+                return null;
+            }
+
+            return string.Join(" , ", Result.Errors.Select(e => e.Description).ToList());
         }
         public async Task<AuthDto> LoginAync(string email, string password)
         {
@@ -44,6 +51,7 @@ namespace MoviesLibrary.EF.Repositories
                 ExpireOn = jwt.ValidTo,
                 Email = User.Email,
                 UserName = User.UserName,
+                Roles = (await _userManager.GetRolesAsync(User)).ToList()
             };
         }
         public async Task LogoutAsync(ApplicationUser user)

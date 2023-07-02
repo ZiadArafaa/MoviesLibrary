@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MoviesLibrary.EF.Data;
 
@@ -11,9 +12,10 @@ using MoviesLibrary.EF.Data;
 namespace MoviesLibrary.EF.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230701223548_GenereMoviesRelationShip")]
+    partial class GenereMoviesRelationShip
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -269,14 +271,11 @@ namespace MoviesLibrary.EF.Migrations
 
                     b.Property<string>("PosterUrl")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("PublicId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("PublishingDate")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("PublishingYear")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()

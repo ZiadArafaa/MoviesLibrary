@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MoviesLibrary.Core;
 using MoviesLibrary.Core.Dtos;
 using MoviesLibrary.Core.Models;
 using MoviesLibrary.Core.Repositories;
 using MoviesLibrary.Core.Services;
+using MoviesLibrary.EF;
 using UoN.ExpressiveAnnotations.NetCore.Analysis;
 
 namespace MoviesLibrary.API.Controllers
@@ -13,12 +15,10 @@ namespace MoviesLibrary.API.Controllers
     [ApiController]
     public class GeneresController : ControllerBase
     {
-        private readonly IGenereRepository _repository;
-        private readonly IMapper _mapper;
-        public GeneresController(IGenereRepository repository, IMapper mapper)
+        private readonly IUnitOfWork _unitOfWork;
+        public GeneresController(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
-            _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpPost("Create")]
@@ -32,12 +32,15 @@ namespace MoviesLibrary.API.Controllers
 
             model.Poster = Poster;
 
-            return Ok(await _repository.CreateAsync(model));
+            await _unitOfWork.Generes.CreateAsync(model);
+            _unitOfWork.SaveChanges();
+
+            return Ok(model);
         }
         [HttpPut("Update/{id}")]
         public async Task<IActionResult> UpdateAsync(byte id, [FromForm] UpdateGenereDto dto)
         {
-            var model = await _repository.GetByIdAsync(id);
+            var model = await _unitOfWork.Generes.GetByIdAsync(id);
             if (model is null)
                 return NotFound();
 
@@ -52,17 +55,15 @@ namespace MoviesLibrary.API.Controllers
                 model.Poster = Poster;
             }
 
-            int effected = _repository.Update(model);
-
-            if (!effected.Equals(1))
-                return BadRequest("Something Wrong!");
+            _unitOfWork.Generes.Update(model);
+            _unitOfWork.SaveChanges();
 
             return Ok(model);
         }
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllAsync()
         {
-            var Generes = await _repository.GetAllAsync();
+            var Generes = await _unitOfWork.Generes.GetAllAsync();
 
             if (!Generes.Any())
                 return NotFound();
@@ -72,7 +73,7 @@ namespace MoviesLibrary.API.Controllers
         [HttpGet("Get/{id}")]
         public async Task<IActionResult> GetByIdAsync(byte id)
         {
-            var Genere = await _repository.GetByIdAsync(id);
+            var Genere = await _unitOfWork.Generes.GetByIdAsync(id);
 
             if (Genere is null)
                 return NotFound();
@@ -82,15 +83,13 @@ namespace MoviesLibrary.API.Controllers
         [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> DeleteAsync(byte id)
         {
-            var Genere = await _repository.GetByIdAsync(id);
+            var Genere = await _unitOfWork.Generes.GetByIdAsync(id);
 
             if (Genere is null)
                 return NotFound();
 
-            int effected = _repository.Delete(Genere);
-
-            if(!effected.Equals(1))
-                return BadRequest("Something Wrong!");
+            _unitOfWork.Generes.Delete(Genere);
+            _unitOfWork.SaveChanges();
 
             return Ok(Genere);
         }
