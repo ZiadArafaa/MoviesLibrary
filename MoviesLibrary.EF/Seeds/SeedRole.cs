@@ -19,8 +19,8 @@ namespace MoviesLibrary.EF.Seeds
         {
             if(!_roleManager.Roles.Any()) 
             {
-               await _roleManager.CreateAsync(new IdentityRole(Role.Admin));
-               await _roleManager.CreateAsync(new IdentityRole(Role.User));
+               await _roleManager.CreateAsync(new IdentityRole(AppRole.Admin));
+               await _roleManager.CreateAsync(new IdentityRole(AppRole.User));
             }
         }
     }

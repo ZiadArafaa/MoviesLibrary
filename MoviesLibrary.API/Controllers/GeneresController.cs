@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MoviesLibrary.Core;
+using MoviesLibrary.Core.Consts;
 using MoviesLibrary.Core.Dtos;
 using MoviesLibrary.Core.Models;
 using MoviesLibrary.Core.Repositories;
@@ -13,6 +16,7 @@ namespace MoviesLibrary.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = AppRole.Admin)]
     public class GeneresController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -60,6 +64,7 @@ namespace MoviesLibrary.API.Controllers
 
             return Ok(model);
         }
+        [AllowAnonymous]
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllAsync()
         {
@@ -70,6 +75,7 @@ namespace MoviesLibrary.API.Controllers
 
             return Ok(Generes);
         }
+        [AllowAnonymous]
         [HttpGet("Get/{id}")]
         public async Task<IActionResult> GetByIdAsync(byte id)
         {

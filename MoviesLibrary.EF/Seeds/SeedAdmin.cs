@@ -22,7 +22,7 @@ namespace MoviesLibrary.EF.Seeds
             {
                 var User = new ApplicationUser { Email = "Admin@tst.com", UserName = "Admin" };
                 await _userManager.CreateAsync(User, "P@ssword123");
-                await _userManager.AddToRoleAsync(User, Role.Admin);
+                await _userManager.AddToRoleAsync(User, AppRole.Admin);
             }
         }
     }

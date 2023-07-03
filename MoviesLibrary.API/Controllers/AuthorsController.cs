@@ -47,6 +47,7 @@ namespace MoviesLibrary.API.Controllers
 
             return Ok(Result);
         }
+        [Authorize]
         [HttpPost("Logout")]
         public async Task<IActionResult> LogoutAsync([EmailAddress] string Email)
         {

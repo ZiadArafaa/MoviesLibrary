@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MoviesLibrary.Core.Consts
 {
-    public static class Role
+    public static class AppRole
     {
         public const string Admin = "Admin";
         public const string User = "User";

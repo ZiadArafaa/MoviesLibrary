@@ -28,7 +28,7 @@ namespace MoviesLibrary.EF.Repositories
 
             if (Result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, Role.User);
+                await _userManager.AddToRoleAsync(user, AppRole.User);
                 return null;
             }
 
