@@ -344,17 +344,12 @@ namespace MoviesLibrary.EF.Migrations
             modelBuilder.Entity("MoviesLibrary.Core.Models.Movie", b =>
                 {
                     b.HasOne("MoviesLibrary.Core.Models.Genere", "Genere")
-                        .WithMany("Movies")
+                        .WithMany()
                         .HasForeignKey("GenereId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Genere");
-                });
-
-            modelBuilder.Entity("MoviesLibrary.Core.Models.Genere", b =>
-                {
-                    b.Navigation("Movies");
                 });
 #pragma warning restore 612, 618
         }

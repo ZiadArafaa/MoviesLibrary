@@ -5,12 +5,30 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MoviesLibrary.EF.Migrations
 {
-    public partial class AddDatabase : Migration
+    public partial class DatabaseGenerated : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
+                name: "Library");
+
+            migrationBuilder.EnsureSchema(
                 name: "Auth");
+
+            migrationBuilder.CreateTable(
+                name: "Generes",
+                schema: "Library",
+                columns: table => new
+                {
+                    Id = table.Column<byte>(type: "tinyint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Poster = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Generes", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Roles",
@@ -52,6 +70,32 @@ namespace MoviesLibrary.EF.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Movies",
+                schema: "Library",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    PosterUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PublicId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PublishingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    GenereId = table.Column<byte>(type: "tinyint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Movies", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Movies_Generes_GenereId",
+                        column: x => x.GenereId,
+                        principalSchema: "Library",
+                        principalTable: "Generes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -172,6 +216,12 @@ namespace MoviesLibrary.EF.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Movies_GenereId",
+                schema: "Library",
+                table: "Movies",
+                column: "GenereId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RoleClaims_RoleId",
                 schema: "Auth",
                 table: "RoleClaims",
@@ -229,6 +279,10 @@ namespace MoviesLibrary.EF.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Movies",
+                schema: "Library");
+
+            migrationBuilder.DropTable(
                 name: "RoleClaims",
                 schema: "Auth");
 
@@ -247,6 +301,10 @@ namespace MoviesLibrary.EF.Migrations
             migrationBuilder.DropTable(
                 name: "UserTokens",
                 schema: "Auth");
+
+            migrationBuilder.DropTable(
+                name: "Generes",
+                schema: "Library");
 
             migrationBuilder.DropTable(
                 name: "Roles",

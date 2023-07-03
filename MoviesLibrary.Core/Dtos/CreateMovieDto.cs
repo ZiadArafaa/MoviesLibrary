@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +10,6 @@ namespace MoviesLibrary.Core.Dtos
 {
     public class CreateMovieDto : MovieDto
     {
-        public string PosterUrl { get; set; } = null!;
-        public string PublicId { get; set; } = null!;
+        public IFormFile Poster { get; set; } = null!;
     }
 }

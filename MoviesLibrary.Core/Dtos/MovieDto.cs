@@ -13,7 +13,7 @@ namespace MoviesLibrary.Core.Dtos
         public string Title { get; set; } = null!;
         [MaxLength(500)]
         public string Description { get; set; } = null!;
-        [AssertThat("PublishingDate <= Today()")]
+        [AssertThat("PublishingDate <= Today()", ErrorMessage = "Check Publish Date.")]
         public DateTime PublishingDate { get; set; }
         public byte GenereId { get; set; }
     }

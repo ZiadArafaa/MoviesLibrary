@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +23,27 @@ namespace MoviesLibrary.Core.Services
             await FormFile.CopyToAsync(stream);
 
             return stream.ToArray();
+        }
+        public async static Task<Dictionary<string,string>?> UploadImageAsync(IFormFile FormFile, Cloudinary cloudinary)
+        {
+            if (FormFile.Length > ImageSize || !Extensions.Contains(Path.GetExtension(FormFile.FileName).ToLower()))
+                return null;
+
+            var ImageStream = FormFile.OpenReadStream();
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription("Image", ImageStream),
+                FilenameOverride = Guid.NewGuid().ToString() + Path.GetExtension(FormFile.FileName)
+            };
+            var uploadResult = await cloudinary.UploadAsync(uploadParams);
+
+            return new() { {"Url",uploadResult.SecureUrl.ToString() }, {"PublicId",uploadResult.PublicId } };
+        }
+        public async static Task DeleteAsync(string PublicId,Cloudinary cloudinary)
+        {
+            var DeletionParams =new DeletionParams(PublicId);
+
+            await cloudinary.DestroyAsync(DeletionParams);
         }
     }
 }

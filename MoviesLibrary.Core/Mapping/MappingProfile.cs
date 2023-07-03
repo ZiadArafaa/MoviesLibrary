@@ -15,6 +15,8 @@ namespace MoviesLibrary.Core.Mapping
         {
             CreateMap<RegisterDto, ApplicationUser>();
             CreateMap<CreateGenereDto, Genere>();
+            CreateMap<CreateMovieDto, Movie>();
+            CreateMap<UpdateMovieDto, Movie>();
             
         }
     }

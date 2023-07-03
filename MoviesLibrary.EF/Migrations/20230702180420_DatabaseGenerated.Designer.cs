@@ -12,8 +12,8 @@ using MoviesLibrary.EF.Data;
 namespace MoviesLibrary.EF.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230616195644_AddGeneresTable")]
-    partial class AddGeneresTable
+    [Migration("20230702180420_DatabaseGenerated")]
+    partial class DatabaseGenerated
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -266,13 +266,19 @@ namespace MoviesLibrary.EF.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("PosterName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<byte>("GenereId")
+                        .HasColumnType("tinyint");
 
-                    b.Property<int>("PublishingYear")
-                        .HasColumnType("int");
+                    b.Property<string>("PosterUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PublicId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("PublishingDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -280,6 +286,8 @@ namespace MoviesLibrary.EF.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GenereId");
 
                     b.ToTable("Movies", "Library");
                 });
@@ -333,6 +341,17 @@ namespace MoviesLibrary.EF.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MoviesLibrary.Core.Models.Movie", b =>
+                {
+                    b.HasOne("MoviesLibrary.Core.Models.Genere", "Genere")
+                        .WithMany()
+                        .HasForeignKey("GenereId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Genere");
                 });
 #pragma warning restore 612, 618
         }
